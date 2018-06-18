@@ -172,7 +172,7 @@ big_integer &big_integer::operator*=(big_integer const &rhs) {
 
 big_integer &big_integer::operator/=(big_integer const &rhs) {
     if (rhs == 0) throw "division by zero";
-    bool newSign = isNegative ^ rhs.isNegative;
+    bool newSign = isNegative ^rhs.isNegative;
 
     if (*this == 0 || abs(rhs) > abs(*this)) {
         *this = 0;
@@ -307,12 +307,21 @@ big_integer &big_integer::operator^=(big_integer const &rhs) {
     return minimise();
 }
 
+big_integer big_integer::honNegation() {
+    big_integer a(*this);
+    for (size_t i = 0; i < digits.size(); i++) {
+        a.digits[i] = ~a.digits[i];
+    }
+    return a;
+}
+
 big_integer &big_integer::operator<<=(int rhs) {
     if (rhs < 0) {
         return *this >>= -rhs; // ?
     }
     uint32_t bigShift = static_cast<uint32_t>(rhs) / 32;
     uint32_t smallShift = static_cast<uint32_t>(rhs) % 32;
+    bool wasNegative = isNegative;
     toTwosComplement();
     std::vector<uint32_t> res(digits.size());
     uint32_t carry = 0;
@@ -328,8 +337,13 @@ big_integer &big_integer::operator<<=(int rhs) {
     for (size_t i = 0; i < res.size(); i++) {
         digits.push_back(res[i]);
     }
+    digits.push_back(0);
     toSignedForm();
-    return minimise();
+    minimise();
+    if (wasNegative) {
+        *this = -honNegation() - 1;
+    }
+    return *this;
 }
 
 big_integer &big_integer::operator>>=(int rhs) {
@@ -338,26 +352,19 @@ big_integer &big_integer::operator>>=(int rhs) {
     }
     uint32_t bigShift = static_cast<uint32_t>(rhs) / 32;
     uint32_t smallShift = static_cast<uint32_t>(rhs) % 32;
-    bool wasNegative = isNegative;
-    toTwosComplement();
     std::vector<uint32_t> res(digits.size() - bigShift);
     uint64_t carry = 0;
     for (size_t i = res.size(); i > 0; i--) {
-        uint64_t tmp = (static_cast<uint64_t >(digits[i - 1]) << 32) >> smallShift;
+        uint64_t tmp = static_cast<uint64_t >(digits[i - 1]) << (32 - smallShift);
         res[i - 1] = static_cast<uint32_t>((tmp >> 32) + carry);
         carry = tmp & UINT32_MAX;
     }
-    if (wasNegative) {
-        for (size_t i = 0; i < smallShift; i++) {
-            res[0] |= (1 << (31 - i));
-        }
-        for (size_t i = 0; i < bigShift; i++) {
-            res.push_back(UINT32_MAX);
-        }
-    }
     swap(res, digits);
-    toSignedForm();
-    return minimise();
+    minimise();
+    if (isNegative) {
+        *this -= 1;
+    }
+    return *this;
 }
 
 big_integer big_integer::operator+() const {
@@ -491,6 +498,25 @@ big_integer operator>>(big_integer a, int bits) {
     return a >>= bits;
 }
 
+std::string big_integer::debugToString() {
+    std::string str = "";
+    for (int i = 0; i < digits.size(); i++) {
+        uint32_t dig = digits[i];
+        for (size_t i = 0; i < 32; i++) {
+            if (dig % 2 == 0) {
+                str = "0 " + str;
+            } else {
+                str = "1 " + str;
+            }
+            dig /= 2;
+        }
+        str = "\n" + str;
+        //str = std::to_string(digits[i]) + " " + str;
+    }
+    str += "\n";
+    str = (isNegative ? "- " : "  ") + str;
+    return str;
+}
 
 std::string to_string(big_integer const &a) {
     if (a.digits.size() == 0) {
