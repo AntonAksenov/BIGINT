@@ -500,7 +500,7 @@ big_integer operator>>(big_integer a, int bits) {
 
 std::string big_integer::debugToString() {
     std::string str = "";
-    for (int i = 0; i < digits.size(); i++) {
+    for (size_t i = 0; i < digits.size(); i++) {
         uint32_t dig = digits[i];
         for (size_t i = 0; i < 32; i++) {
             if (dig % 2 == 0) {
