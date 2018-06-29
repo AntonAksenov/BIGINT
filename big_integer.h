@@ -10,7 +10,12 @@
 #include <iostream>
 #include <vector>
 
+
 struct big_integer {
+
+    big_integer honNegation();
+    std::string debugToString();
+
     big_integer();
     big_integer(int a);
     big_integer(big_integer const &other);
