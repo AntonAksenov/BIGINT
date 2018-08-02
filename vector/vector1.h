@@ -1,5 +1,5 @@
-#ifndef UNTITLED4_VECTOR1_H
-#define UNTITLED4_VECTOR1_H
+#ifndef BIGINT_VECTOR_H
+#define BIGINT_VECTOR_H
 
 #include "CoW_array.h"
 
@@ -40,4 +40,4 @@ public:
 };
 
 
-#endif //UNTITLED4_VECTOR1_H
+#endif //BIGINT_VECTOR_H
