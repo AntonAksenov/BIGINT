@@ -8,7 +8,8 @@
 #include <string>
 #include <cmath>
 #include <iostream>
-#include <vector>
+
+#include "vector\vector.h"
 
 
 struct big_integer {
@@ -58,7 +59,7 @@ struct big_integer {
 
 private:
     bool isNegative;
-    std::vector<uint32_t> digits;
+    vector digits;
 
     big_integer& minimise();
     void toTwosComplement();
