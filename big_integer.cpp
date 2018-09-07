@@ -13,14 +13,14 @@ big_integer &big_integer::minimise() {
     return *this;
 }
 
-big_integer::big_integer() : isNegative(false) {}
+big_integer::big_integer() : isNegative(false), digits() {}
 
 big_integer::big_integer(big_integer const &other) : isNegative(other.isNegative), digits(other.digits) {}
 
-big_integer::big_integer(int a) : isNegative(a < 0) {
-    if (a) {
-        digits.push_back(static_cast<uint32_t>(std::abs(static_cast<int64_t>(a))));
-    }
+big_integer::big_integer(int a) : isNegative(a < 0), digits(){
+        if (a) {
+            digits.push_back(static_cast<uint32_t>(std::abs(static_cast<int64_t>(a))));
+        }
 }
 
 big_integer add_long_int_unsigned(big_integer const &a, uint32_t const &b) {
@@ -94,7 +94,7 @@ big_integer &big_integer::operator+=(big_integer const &rhs) {
         *this -= -rhs;
         return *this;
     }
-    std::vector<uint32_t> res(std::max(digits.size(), rhs.digits.size()) + 1);
+    vector res(std::max(digits.size(), rhs.digits.size()) + 1);
     uint64_t carry = 0;
     for (size_t i = 0; i < std::min(digits.size(), rhs.digits.size()); i++) {
         carry += static_cast<uint64_t>(digits[i]) + rhs.digits[i];
@@ -130,7 +130,7 @@ big_integer &big_integer::operator-=(big_integer const &rhs) {
         min = &rhs;
         max = this;
     }
-    std::vector<uint32_t> res(max->digits.size(), 0);
+    vector res(max->digits.size(), 0);
     bool borrow = false;
     for (size_t i = 0; i < res.size(); i++) {
         int64_t cur = max->digits[i];
@@ -156,7 +156,7 @@ big_integer &big_integer::operator-=(big_integer const &rhs) {
 
 big_integer &big_integer::operator*=(big_integer const &rhs) {
     isNegative ^= rhs.isNegative;
-    std::vector<uint32_t> res(digits.size() + rhs.digits.size(), 0);
+    vector res(digits.size() + rhs.digits.size(), 0);
     for (size_t i = 0; i < digits.size(); i++) {
         uint32_t carry = 0;
         for (size_t j = 0; j < rhs.digits.size(); j++) {
@@ -200,7 +200,7 @@ big_integer long_unsigned_division(big_integer const &l, big_integer const &r) {
     big_integer a(mul_long_int_unsigned(l, scaling_factor));
     big_integer b(mul_long_int_unsigned(r, scaling_factor));
 
-    std::vector<uint32_t> result(a.digits.size() - b.digits.size() + 1);
+    vector result(a.digits.size() - b.digits.size() + 1);
 
     big_integer cur_prefix;
     cur_prefix.digits.resize(b.digits.size() - 1);
@@ -209,7 +209,9 @@ big_integer long_unsigned_division(big_integer const &l, big_integer const &r) {
     }
     uint64_t b1 = b.digits[b.digits.size() - 1];
     for (size_t i = result.size(); i > 0; i--) {
-        cur_prefix.digits.insert(cur_prefix.digits.begin(), a.digits[i - 1]);
+
+        cur_prefix.digits.push_front(a.digits[i - 1]);
+        //cur_prefix.digits.insert(cur_prefix.digits.begin(), a.digits[i - 1]);
 
         uint64_t a2 = cur_prefix.digits[cur_prefix.digits.size() - 1];
         if (cur_prefix.digits.size() > b.digits.size()) {
@@ -258,7 +260,7 @@ void big_integer::toSignedForm() {
 }
 
 big_integer &big_integer::operator&=(big_integer const &rhs) {
-    std::vector<uint32_t> res(std::max(digits.size(), rhs.digits.size()));
+    vector res(std::max(digits.size(), rhs.digits.size()));
     toTwosComplement();
     big_integer rhsCopy = rhs;
     rhsCopy.toTwosComplement();
@@ -289,7 +291,7 @@ big_integer &big_integer::operator|=(big_integer const &rhs) {
 }
 
 big_integer &big_integer::operator^=(big_integer const &rhs) {
-    std::vector<uint32_t> res(std::max(digits.size(), rhs.digits.size()));
+    vector res(std::max(digits.size(), rhs.digits.size()));
     toTwosComplement();
     big_integer rhsCopy = rhs;
     rhsCopy.toTwosComplement();
@@ -323,7 +325,7 @@ big_integer &big_integer::operator<<=(int rhs) {
     uint32_t smallShift = static_cast<uint32_t>(rhs) % 32;
     bool wasNegative = isNegative;
     toTwosComplement();
-    std::vector<uint32_t> res(digits.size());
+    vector res(digits.size());
     uint32_t carry = 0;
     for (size_t i = 0; i < res.size(); i++) {
         uint64_t cur = (static_cast<uint64_t>(digits[i]) << smallShift) + carry;
@@ -352,7 +354,7 @@ big_integer &big_integer::operator>>=(int rhs) {
     }
     uint32_t bigShift = static_cast<uint32_t>(rhs) / 32;
     uint32_t smallShift = static_cast<uint32_t>(rhs) % 32;
-    std::vector<uint32_t> res(digits.size() - bigShift);
+    vector res(digits.size() - bigShift);
     uint64_t carry = 0;
     for (size_t i = res.size(); i > 0; i--) {
         uint64_t tmp = static_cast<uint64_t >(digits[i - 1]) << (32 - smallShift);
@@ -519,6 +521,7 @@ std::string big_integer::debugToString() {
 }
 
 std::string to_string(big_integer const &a) {
+    //a.digits.toString();
     if (a.digits.size() == 0) {
         return "0";
     }
