@@ -1,68 +1,91 @@
-#ifndef BIGINT_LAST_VECTOR_H
-#define BIGINT_LAST_VECTOR_H
+#ifndef BIG_INTEGER_H
+#define BIG_INTEGER_H
 
-#include "CoW.h"
-
-class vector {
-    size_t vector_size;
-    bool big;
-
-    uint32_t small_data = 0;
-
-    CoW *big_data = nullptr;
-
-    void make_big();
-
-    void make_small();
-
-public:
-
-    vector();
-
-    vector(size_t size);
-
-    vector(size_t size, uint32_t value);
-
-    vector(const vector &other);
-
-    ~vector();
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
+#include <limits>
+#include <string>
+#include <cmath>
+#include <iostream>
+#include <vector>
 
 
-    size_t size() const;
+struct big_integer {
 
-    bool empty() const;
+    big_integer honNegation();
+    std::string debugToString();
 
+    big_integer();
+    big_integer(int a);
+    big_integer(big_integer const &other);
+    explicit big_integer(std::string const &str);
+    ~big_integer();
 
-    void push_back(uint32_t value);
+    big_integer &operator=(big_integer const &other);
 
-    uint32_t pop_back();
+    big_integer &operator+=(big_integer const &rhs);
+    big_integer &operator-=(big_integer const &rhs);
+    big_integer &operator*=(big_integer const &rhs);
+    big_integer &operator/=(big_integer const &rhs);
+    big_integer &operator%=(big_integer const &rhs);
 
-    void push_front(uint32_t value);
+    big_integer &operator&=(big_integer const &rhs);
+    big_integer &operator|=(big_integer const &rhs);
+    big_integer &operator^=(big_integer const &rhs);
 
+    big_integer &operator<<=(int rhs);
+    big_integer &operator>>=(int rhs);
 
-    uint32_t &operator[](size_t index);
+    big_integer operator+() const;
+    big_integer operator-() const;
+    big_integer operator~() const;
 
-    const uint32_t &operator[](size_t index) const;
+    big_integer &operator++();
+    big_integer operator++(int);
+    big_integer &operator--();
+    big_integer operator--(int);
 
-    uint32_t &back();
+    friend bool operator==(big_integer const &a, big_integer const &b);
+    friend bool operator!=(big_integer const &a, big_integer const &b);
+    friend bool operator<(big_integer const &a, big_integer const &b);
+    friend bool operator>(big_integer const &a, big_integer const &b);
+    friend bool operator<=(big_integer const &a, big_integer const &b);
+    friend bool operator>=(big_integer const &a, big_integer const &b);
 
-    const uint32_t &back() const;
+    friend std::string to_string(big_integer const &a);
+    friend big_integer abs(big_integer const &a);
 
+private:
+    bool isNegative;
+    std::vector<uint32_t> digits;
 
-    friend void swap(vector &a, vector &b);
+    big_integer& minimise();
+    void toTwosComplement();
+    void toSignedForm();
 
-    friend bool operator==(vector const &a, vector const &b);
-
-    void resize(size_t capacity);
-
-    void clear();
-
-
-    void toString() const;
+    friend big_integer long_unsigned_division(big_integer const &a, big_integer const &b);
+    friend big_integer add_long_int_unsigned(big_integer const &a, uint32_t const &b);
+    friend big_integer mul_long_int_unsigned(big_integer const &a, uint32_t const &b);
 };
 
-void swap(vector &a, vector &b);
+big_integer operator+(big_integer a, big_integer const &b);
+big_integer operator-(big_integer a, big_integer const &b);
+big_integer operator*(big_integer a, big_integer const &b);
+big_integer operator/(big_integer a, big_integer const &b);
+big_integer operator%(big_integer a, big_integer const &b);
 
-bool operator==(vector const &a, vector const &b);
+big_integer operator&(big_integer a, big_integer const &b);
+big_integer operator|(big_integer a, big_integer const &b);
+big_integer operator^(big_integer a, big_integer const &b);
+big_integer operator<<(big_integer a, int bits);
+big_integer operator>>(big_integer a, int bits);
 
-#endif //BIGINT_LAST_VECTOR_H
+std::ostream &operator<<(std::ostream &s, big_integer const &a);
+
+big_integer add_long_int_unsigned(big_integer const &a, uint32_t const &b);
+big_integer mul_long_int_unsigned(big_integer const &a, uint32_t const &b);
+big_integer long_unsigned_division(big_integer const &a, big_integer const &b);
+big_integer abs(big_integer const &a);
+
+#endif // BIG_INTEGER_H
