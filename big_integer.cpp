@@ -57,8 +57,8 @@ big_integer::big_integer(std::string const &str) {
     //static std::vector<uint32_t> ten_pow{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
     static std::vector<uint32_t> ten_pow(arr, arr + 10);
 
-    size_t end(str.length() - 1);
-    size_t start(0);
+    size_t end = str.length() - 1;
+    size_t start = 0;
     if (str[0] == '-') {
         start++;
     }
@@ -502,7 +502,7 @@ big_integer operator>>(big_integer a, int bits) {
     return a >>= bits;
 }
 
-std::string big_integer::debugToString() {
+std::string big_integer::debugToString()const {
     std::string str = "";
     for (size_t i = 0; i < digits.size(); i++) {
         uint32_t dig = digits[i];
