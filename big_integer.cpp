@@ -1,5 +1,7 @@
 #include <iostream>
-#include "vector.h"
+#include <algorithm>
+#include <assert.h>
+#include "big_integer.h"
 
 vector::vector() : big(false), vector_size(0) {}
 
