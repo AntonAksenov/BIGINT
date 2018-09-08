@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cassert>
 #include "vector.h"
 
 vector::vector() : big(false), vector_size(0) {}
