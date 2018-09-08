@@ -9,8 +9,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "vector\vector.h"
-
+#include "vector/vector.h"
 
 struct big_integer {
 
