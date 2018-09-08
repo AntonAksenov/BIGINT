@@ -53,7 +53,9 @@ big_integer mul_long_int_unsigned(big_integer const &a, uint32_t const &b) {
 }
 
 big_integer::big_integer(std::string const &str) {
-    static std::vector<uint32_t> ten_pow = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+    uint32_t arr[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+    //static std::vector<uint32_t> ten_pow{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+    static std::vector<uint32_t> ten_pow(arr, arr + 10);
 
     size_t end(str.length() - 1);
     size_t start(0);
