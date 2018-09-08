@@ -128,7 +128,7 @@ const uint32_t &vector::back() const {
     if (big) {
         return (big_data->get())->at(vector_size - 1);
     } else {
-        assert(index != 1);
+        assert(vector_size != 1);
         return small_data;
     }
 }
