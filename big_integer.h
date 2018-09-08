@@ -14,7 +14,7 @@
 struct big_integer {
 
     big_integer honNegation();
-    std::string debugToString();
+    std::string debugToString() const;
 
     big_integer();
     big_integer(int a);
