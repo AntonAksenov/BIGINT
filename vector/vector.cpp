@@ -68,9 +68,8 @@ void vector::push_back(uint32_t value) {
 }
 
 uint32_t vector::pop_back() {
-    if (vector_size == 0) {
-        ///assert
-    } else if (vector_size == 1) {
+    assert(vector_size != 0);
+    if (vector_size == 1) {
         vector_size--;
         return small_data;
     } else {
@@ -102,11 +101,8 @@ uint32_t &vector::operator[](size_t index) {
     if (big) {
         return (big_data->get())->at(index);
     } else {
-        if (index == 0) {
-            return small_data;
-        } else {
-            ///assert
-        }
+        assert(index != 0);
+        return small_data;
     }
 }
 
@@ -114,11 +110,8 @@ const uint32_t &vector::operator[](size_t index) const {
     if (big) {
         return (big_data->get())->at(index);
     } else {
-        if (index == 0) {
-            return small_data;
-        } else {
-            ///assert
-        }
+        assert(index != 0);
+        return small_data;
     }
 }
 
@@ -126,11 +119,8 @@ uint32_t &vector::back() {
     if (big) {
         return (big_data->get())->at(vector_size - 1);
     } else {
-        if (vector_size - 1 == 0) {
-            return small_data;
-        } else {
-            ///assert
-        }
+        assert(index != 1);
+        return small_data;
     }
 }
 
@@ -138,11 +128,8 @@ const uint32_t &vector::back() const {
     if (big) {
         return (big_data->get())->at(vector_size - 1);
     } else {
-        if (vector_size - 1 == 0) {
-            return small_data;
-        } else {
-            ///assert
-        }
+        assert(index != 1);
+        return small_data;
     }
 }
 
