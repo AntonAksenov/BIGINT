@@ -102,7 +102,7 @@ uint32_t &vector::operator[](size_t index) {
     if (big) {
         return (big_data->get())->at(index);
     } else {
-        assert(index != 0);
+        assert(index == 0);
         return small_data;
     }
 }
@@ -111,7 +111,7 @@ const uint32_t &vector::operator[](size_t index) const {
     if (big) {
         return (big_data->get())->at(index);
     } else {
-        assert(index != 0);
+        assert(index == 0);
         return small_data;
     }
 }
@@ -120,7 +120,7 @@ uint32_t &vector::back() {
     if (big) {
         return (big_data->get())->at(vector_size - 1);
     } else {
-        assert(index != 1);
+        assert(vector_size == 1);
         return small_data;
     }
 }
@@ -129,7 +129,7 @@ const uint32_t &vector::back() const {
     if (big) {
         return (big_data->get())->at(vector_size - 1);
     } else {
-        assert(vector_size != 1);
+        assert(vector_size == 1);
         return small_data;
     }
 }
