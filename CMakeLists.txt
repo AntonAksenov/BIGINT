@@ -9,9 +9,16 @@ add_executable(BIGINT
         big_integer.h
         big_integer.cpp
         big_integer_testing.cpp
+
+        vector/vector.h
+        vector/vector.cpp
+        vector/CoW.h
+        vector/CoW.cpp
+
         gtest/gtest-all.cc
         gtest/gtest.h
         gtest/gtest_main.cc)
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-parentheses -pedantic")
+
