@@ -4,9 +4,9 @@
 #include "CoW.h"
 
 class vector {
-    size_t vector_size;
     bool big;
-
+    size_t vector_size;
+    
     uint32_t small_data = 0;
 
     CoW *big_data = nullptr;
