@@ -4,10 +4,12 @@
 #include "CoW.h"
 
 class vector {
+    static const size_t SMALL_SIZE = 30;
+
     bool big;
     size_t vector_size;
     
-    uint32_t small_data = 0;
+    uint32_t small_data[SMALL_SIZE];
 
     CoW *big_data = nullptr;
 
@@ -66,4 +68,3 @@ void swap(vector &a, vector &b);
 bool operator==(vector const &a, vector const &b);
 
 #endif //BIGINT_LAST_VECTOR_H
-
